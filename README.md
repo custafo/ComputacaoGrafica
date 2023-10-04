@@ -10,3 +10,4 @@ Componentes dos Grupo:
 - Heloísa Fernanda
 - Isadora Vitória
 - João Gabriel
+- Pedro Benedito
