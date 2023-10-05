@@ -1,3 +1,6 @@
+import processing.sound.*;
+
+SoundFile song;
 MyThread anim;
 Person2 person2;
 Casa casa;
@@ -15,7 +18,9 @@ void setup(){
   anim = new MyThread();
   ocean = new Ocean(height/1.25, dia);
   coq = new Coqueiro();
-  
+
+  song = new SoundFile(this, "Under the Sea.mp3")
+
   noLoop();
   noSmooth();
 }
