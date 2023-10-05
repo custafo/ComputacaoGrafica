@@ -1,16 +1,13 @@
 class MyThread extends Thread implements Runnable{
-  
-  Thread thread;
+  Thread t;
   
   MyThread(){
-    thread = new Thread(this);
-    thread.start();
+    t = new Thread(this);
+    t.start();
   }
   
-  @Override
   public void run(){
-    while(true)
-    {
+    while(true){
       redraw();
     }
   }
