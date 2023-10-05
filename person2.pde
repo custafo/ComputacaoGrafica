@@ -21,11 +21,7 @@ class Person2{
   }
   
   void draw(boolean day){
-    if(insideHouse() == true && day == false)
-    {
-      
-    }
-    else
+    if(insideHouse() != true || day != false)
     {
       this.day = day;
       changeColor();
@@ -41,6 +37,23 @@ class Person2{
       line(pos[0], pos[1]+20, pos[0]-10, pos[1]+35);
       line(pos[0], pos[1]+20, pos[0]+10, pos[1]+35);
       movePerson();
+    }
+    else
+    {
+      /*this.day = day;
+      changeColor();
+      //cabeca
+      strokeWeight(15);
+      point(pos[0], pos[1]);
+      //torso
+      strokeWeight(5);
+      line(pos[0], pos[1], pos[0], pos[1]+20);
+      //braco
+      line(pos[0]-10, pos[1]+10, pos[0]+10, pos[1]+10);
+      //perna
+      line(pos[0], pos[1]+20, pos[0]-10, pos[1]+35);
+      line(pos[0], pos[1]+20, pos[0]+10, pos[1]+35);
+      movePerson();*/
     }
   }
   
