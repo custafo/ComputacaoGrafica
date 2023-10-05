@@ -19,7 +19,8 @@ void setup(){
   ocean = new Ocean(height/1.25, dia);
   coq = new Coqueiro();
 
-  song = new SoundFile(this, "Under the Sea.mp3")
+  song = new SoundFile(this, "Under the Sea.mp3");
+  song.loop();
 
   noLoop();
   noSmooth();
