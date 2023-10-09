@@ -73,7 +73,7 @@ void draw(){
    }
   //----------
   
-  ocean.draw(sol);
+  ocean.draw(sol, obj);
   
   terra.draw();
   

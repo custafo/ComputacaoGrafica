@@ -1,11 +1,6 @@
 class Ocean{
   private Point[][] matrizOcean;
-  private boolean dirX = true, dirY = true; //true = esquerda e cima / false = direita e baixo
-  private float a = 0.008f, b = 0.008f;
-  private float[][] matrizCisX = {{1, b, 0}, {0, 1, 0}, {0, 0, 1}};
-  private float[][] matrizCisY = {{1, 0, 0}, {a, 1, 0}, {0, 0, 1}};
-  private float yBase;
-  private float sunHeight, moonHeight;
+  private boolean dir = true; //true = esquerda, false = direita
   private boolean day;
   //matrizOcean[0] parte de cima
   //matriz[1] parte de baixo, vai ate o fim da tela (NAO MODIFICAR)
@@ -17,14 +12,10 @@ class Ocean{
     matrizOcean[1][0] = new Point(0, height);
     matrizOcean[1][1] = new Point(width, height);
     
-    this.yBase = matrizOcean[0][0].getY();
-    this.sunHeight = matrizOcean[0][0].getY() - 30;
-    this.moonHeight = matrizOcean[0][0].getY() - 60;
-    
     this.day = day;
   }
   
-  void draw(boolean day){
+  void draw(boolean day, LuaESol lua){
     this.day = day;
     stroke(0, 0, 255);
     Point p1 = new Point(matrizOcean[0][0].getX(), matrizOcean[0][0].getY());
@@ -42,105 +33,60 @@ class Ocean{
       p1.drawLine(p2);
     }
     
-    //moveY();
-    moveX();
-    
-    matrizOcean[0][0].draw();
-    matrizOcean[0][1].draw();
+    if(day == false)
+    {
+      move(lua);
+    }
+    else if(inPos() == false)
+    {
+      adjustPos();
+    }
   }
   
-  public void moveY(){
-    float[] newPos = new float[3];
-    float limitY;
-    if(day)
+  public void move(LuaESol lua){
+    float x = lua.getX();
+    float speed = 0.008;
+    float media = (matrizOcean[0][0].getX() + matrizOcean[0][1].getX()) / 2;
+    
+    if(x <= width/2)
     {
-      limitY = sunHeight;
+      dir = false;
     }
     else
     {
-      limitY = moonHeight;
+      dir = true;
     }
     
-    if(dirY == true)
+    if(dir == false && media > x) //move esquerda
     {
-      if(matrizOcean[0][0].getY() <= limitY)
-      {
-        dirY = false;
-      }
-      else
-      {
-        newPos[0] = (matrizCisY[0][0] * matrizOcean[0][0].getX()) + (matrizCisY[0][1] * matrizOcean[0][0].getY()) + (matrizCisY[0][2] * 1);
-        newPos[1] = (-matrizCisY[1][0] * matrizOcean[0][0].getX()) + (matrizCisY[1][1] * matrizOcean[0][0].getY()) + (matrizCisY[1][2] * 1);
-        matrizOcean[0][0].setX(newPos[0]);
-        matrizOcean[0][0].setY(newPos[1]);
-        
-        newPos[0] = (matrizCisY[0][0] * matrizOcean[0][1].getX()) + (matrizCisY[0][1] * matrizOcean[0][1].getY()) + (matrizCisY[0][2] * 1);
-        //newPos[1] = (-matrizCisY[1][0] * matrizOcean[0][1].getX()) + (matrizCisY[1][1] * matrizOcean[0][1].getY()) + (matrizCisY[1][2] * 1);
-        matrizOcean[0][1].setX(newPos[0]);
-        matrizOcean[0][1].setY(newPos[1]);
-      }
+      //print("left ");
+      matrizOcean[0][0].setPos(cisalhamentoX(matrizOcean[0][0].getX(), matrizOcean[0][0].getY(), -speed));
+      matrizOcean[0][1].setPos(cisalhamentoX(matrizOcean[0][1].getX(), matrizOcean[0][1].getY(), -speed));
     }
-    else //diry == false
+    else if((dir == true && media < x) || (dir == false && media < x))//move direita |if ponto.x > x|
     {
-      if(matrizOcean[0][0].getY() >= yBase)
+      //print("right ");
+      matrizOcean[0][0].setPos(cisalhamentoX(matrizOcean[0][0].getX(), matrizOcean[0][0].getY(), speed));
+      matrizOcean[0][1].setPos(cisalhamentoX(matrizOcean[0][1].getX(), matrizOcean[0][1].getY(), speed));
+    }
+  }
+  
+  public void adjustPos(){
+    float speed = 0.05;
+    if(matrizOcean[0][0].getX() > 0)
+    {
+      matrizOcean[0][0].setPos(cisalhamentoX(matrizOcean[0][0].getX(), matrizOcean[0][0].getY(), -speed));
+      matrizOcean[0][1].setPos(cisalhamentoX(matrizOcean[0][1].getX(), matrizOcean[0][1].getY(), -speed));
+      
+      if(matrizOcean[0][0].getX() < 0)
       {
-        dirY = true;
-      }
-      else
-      {
-        newPos[0] = (matrizCisY[0][0] * matrizOcean[0][0].getX()) + (matrizCisY[0][1] * matrizOcean[0][0].getY()) + (matrizCisY[0][2] * 1);
-        newPos[1] = (matrizCisY[1][0] * matrizOcean[0][0].getX()) + (matrizCisY[1][1] * matrizOcean[0][0].getY()) + (matrizCisY[1][2] * 1);
-        matrizOcean[0][0].setX(newPos[0]);
-        matrizOcean[0][0].setY(newPos[1]);
-        
-        newPos[0] = (matrizCisY[0][0] * matrizOcean[0][1].getX()) + (matrizCisY[0][1] * matrizOcean[0][1].getY()) + (matrizCisY[0][2] * 1);
-        //newPos[1] = (matrizCisY[1][0] * matrizOcean[0][1].getX()) + (matrizCisY[1][1] * matrizOcean[0][1].getY()) + (matrizCisY[1][2] * 1);
-        matrizOcean[0][1].setX(newPos[0]);
-        matrizOcean[0][1].setY(newPos[1]);
+        matrizOcean[0][0].setX(0);
+        matrizOcean[0][1].setX(width);
       }
     }
   }
   
-  public void moveX(){
-    float newPos[] = new float[3];
-    float limitX = 30;
-    if(dirX == true)
-    {
-      if(matrizOcean[0][0].getX() <= -limitX)
-      {
-        dirX = false;
-      }
-      else
-      {
-        newPos[0] = (matrizCisX[0][0] * matrizOcean[0][0].getX()) + (-matrizCisX[0][1] * matrizOcean[0][0].getY());
-        newPos[1] = (matrizCisX[1][0] * matrizOcean[0][0].getX()) + (matrizCisX[1][1] * matrizOcean[0][0].getY());
-        matrizOcean[0][0].setX(newPos[0]);
-        matrizOcean[0][0].setY(newPos[1]);
-        
-        newPos[0] = (matrizCisX[0][0] * matrizOcean[0][1].getX()) + (-matrizCisX[0][1] * matrizOcean[0][1].getY());
-        newPos[1] = (matrizCisX[1][0] * matrizOcean[0][1].getX()) + (matrizCisX[1][1] * matrizOcean[0][1].getY());
-        matrizOcean[0][1].setX(newPos[0]);
-        matrizOcean[0][1].setY(newPos[1]);
-      }
-    }
-    else //dirx == false
-    {
-      if(matrizOcean[0][0].getX() >= limitX)
-      {
-        dirX = true;
-      }
-      else
-      {
-        newPos[0] = (matrizCisX[0][0] * matrizOcean[0][0].getX()) + (matrizCisX[0][1] * matrizOcean[0][0].getY());
-        newPos[1] = (matrizCisX[1][0] * matrizOcean[0][0].getX()) + (matrizCisX[1][1] * matrizOcean[0][0].getY());
-        matrizOcean[0][0].setX(newPos[0]);
-        matrizOcean[0][0].setY(newPos[1]);
-        
-        newPos[0] = (matrizCisX[0][0] * matrizOcean[0][1].getX()) + (matrizCisX[0][1] * matrizOcean[0][1].getY());
-        newPos[1] = (matrizCisX[1][0] * matrizOcean[0][1].getX()) + (matrizCisX[1][1] * matrizOcean[0][1].getY());
-        matrizOcean[0][1].setX(newPos[0]);
-        matrizOcean[0][1].setY(newPos[1]);
-      }
-    }
+  private boolean inPos(){
+    return matrizOcean[0][0].getX() == 0 && matrizOcean[0][1].getX() == width;
   }
 }
