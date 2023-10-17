@@ -1,3 +1,5 @@
+// Flávio Simões
+// Gustavo Pereira
 class Ocean{
   private Point[][] matrizOcean;
   private boolean dir = true; //true = esquerda, false = direita

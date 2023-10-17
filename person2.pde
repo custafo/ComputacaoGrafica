@@ -1,3 +1,4 @@
+// Flávio Simões
 class Person2{
   private float distance = 70;
   private float speed = 1.5f;
