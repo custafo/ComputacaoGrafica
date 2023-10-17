@@ -11,8 +11,6 @@ class Point{
   }
   
   void draw(){
-    stroke(0);
-    strokeWeight(5);
     point(pos[0][0], pos[1][0]);
   }
   

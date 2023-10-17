@@ -3,12 +3,12 @@ class Person2{
   private float speed = 1.5f;
   private float matriz[][] = {{1, 0, speed}, {0, 1, 0}, {0, 0, 1}};
   private float[] Start, Destin;
-  private float[][] pos;
+  private Point[] points;
   private boolean day;
   //pos[0] = x, pos[1] = y
   
   Person2(float x, float y, boolean day){
-    this.pos = startPos(x, y);
+    this.points = setPoints(x, y);
     this.Start = new float[3];
     this.Destin = new float[3];
     this.Start[0] = x;
@@ -21,9 +21,10 @@ class Person2{
     this.day = day;
   }
   
-  private float[][] startPos(float x, float y){
-    float[][] mat = {{x}, {y}, {1}};
-    return mat;
+  private Point[] setPoints(float x, float y){
+    //primeiro ponto representa a cabeça
+    Point[] vet = {new Point(x, y), new Point(x, y+20), new Point(x-10, y+10), new Point(x+10, y+10), new Point(x, y+20), new Point(x-10, y+35), new Point(x+10, y+35)};
+    return vet;
   }
   
   void draw(boolean day){
@@ -33,15 +34,22 @@ class Person2{
       this.day = day;
       //cabeca
       strokeWeight(15);
-      point(pos[0][0], pos[1][0]);
+      points[0].draw();
       //torso
       strokeWeight(5);
-      line(pos[0][0], pos[1][0], pos[0][0], pos[1][0]+20);
+      points[0].drawLine(points[1]);
+      //line(pos[0][0], pos[1][0], pos[0][0], pos[1][0]+20);
+      
       //braco
-      line(pos[0][0]-10, pos[1][0]+10, pos[0][0]+10, pos[1][0]+10);
+      points[2].drawLine(points[3]);
+      //line(pos[0][0]-10, pos[1][0]+10, pos[0][0]+10, pos[1][0]+10);
+      
       //perna
-      line(pos[0][0], pos[1][0]+20, pos[0][0]-10, pos[1][0]+35);
-      line(pos[0][0], pos[1][0]+20, pos[0][0]+10, pos[1][0]+35);
+      points[1].drawLine(points[5]);
+      //line(pos[0][0], pos[1][0]+20, pos[0][0]-10, pos[1][0]+35);
+      points[1].drawLine(points[6]);
+      //line(pos[0][0], pos[1][0]+20, pos[0][0]+10, pos[1][0]+35);
+      
       movePerson();
     }
     else
@@ -66,14 +74,14 @@ class Person2{
   public void movePerson(){
     if(day == true)
     {
-      if(pos[0][0] > Destin[0])
+      if(getX() > Destin[0])
       {
         moveLeft();
       }
     }
     else //dia = false
     {
-      if(pos[0][0] < Start[0])
+      if(getX() < Start[0])
       {
         moveRight();
       }
@@ -81,32 +89,38 @@ class Person2{
   }
   
   private void moveLeft(){
-    float[][] newPos = translate(pos[0][0], pos[1][0], -speed, 0);
-    if(newPos[0][0] < Destin[0])
+    for(int i = 0; i < points.length; i++)
     {
-      newPos[0][0] = Destin[0];
+      float[][] newPos = translate(points[i].getX(), points[i].getY(), -speed, 0);
+      if(newPos[0][0] < Destin[0] && i == 0)
+      {
+        newPos[0][0] = Destin[0];
+      }
+      points[i].setPos(newPos);
     }
-    pos = newPos;
   }
   
   private void moveRight(){
-    float[][] newPos = translate(pos[0][0], pos[1][0], speed, 0);
-    if(newPos[0][0] > Start[0])
+    for(int i = 0; i < points.length; i++)
     {
-      newPos[0][0] = Start[0];
+      float[][] newPos = translate(points[i].getX(), points[i].getY(), speed, 0);
+      if(newPos[0][0] > Start[0] && i == 0)
+      {
+        newPos[0][0] = Start[0];
+      }
+      points[i].setPos(newPos);
     }
-    pos = newPos;
   }
   
   public float getX(){
-    return pos[0][0];
+    return points[0].getX();
   }
   
   public float getY(){
-    return pos[1][0];
+    return points[0].getY();
   }
   
   public boolean insideHouse(){
-    return pos[0][0] == Start[0] && pos[1][0] == Start[1];
+    return points[0].getX() == Start[0] && points[0].getY() == Start[1];
   }
 }
