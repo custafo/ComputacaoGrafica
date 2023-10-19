@@ -11,7 +11,7 @@ public float [][] multMatriz(float [][] a, float [][] b){
         return asw;
  }
 
-public float[][] translate(float x, float y, float tx, float ty){
+public float[][] translacao(float x, float y, float tx, float ty){
   float[][] matrizTranslate = {{1, 0, tx}, {0, 1, ty}, {0, 0, 1}};
   float[][] matriz = {{x}, {y}, {1}};
   
@@ -30,4 +30,10 @@ public float[][] cisalhamentoY(float x, float y, float a){
   float[][] matriz = {{x}, {y}, {1}};
   
   return multMatriz(matrizCisY, matriz);
+}
+
+public float[][] rotacao(float x, float y, float theta){
+    float[][] matriz = { {cos(theta), -sin(theta), 0}, {sin(theta), cos(theta), 0}, {0, 0, 1} };
+    float[][] xy = { {x}, {y}, {1} };
+    return multMatriz(matriz, xy);
 }

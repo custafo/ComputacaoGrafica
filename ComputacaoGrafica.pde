@@ -1,15 +1,24 @@
 import processing.sound.*;
 
-//baixar as bibliotecas Minim e Sound no processing, clicando na palavra Sketch em cima, dps em import library e dps colocando "sound" na aba de pesquisa
+// Sons: João Gabriel Torres do Nascimento
+//baixar a biblioteca Sound no processing, clicando na palavra Sketch em cima, dps em import library e dps colocando "sound" na aba de pesquisa
 SoundFile song;
+SoundFile cricket;
+SoundFile ronco;
 MyThread anim;
 Person2 person2;
 Casa casa;
 Terreno terra;
 Ocean ocean;
 Coqueiro coq;
-float backg = 255;
+Moinho moinho;
+float[] backg = {187, 243, 249};
 boolean sol = true;
+
+Nuvens[] nuvem = {new Nuvens(), new Nuvens(), new Nuvens()};
+
+//estrela
+Estrela star;
 
 //lua e sol
 LuaESol obj;
@@ -24,28 +33,71 @@ void setup(){
   anim = new MyThread();
   ocean = new Ocean(height/1.25, sol);
   coq = new Coqueiro();
+  moinho = new Moinho();
   
   //lua e sol
   obj = new LuaESol(a);
   obj.exibir(sol, obj.getCord());
   //-------------
+  
+  star = new Estrela();
 
   song = new SoundFile(this, "Under the Sea.mp3");
-  song.loop();
+  cricket = new SoundFile(this, "crickets-sound effect.mp3");
+  ronco = new SoundFile(this, "ronco.mp3");
 
   noLoop();
   noSmooth();
 }
 
 void draw(){
-  background(backg);
-  if(sol == true && backg < 255)
+  background(backg[0], backg[1], backg[2]);
+  if(sol == true)
   {
-    backg+=5;
+    if(song.isPlaying() == false)
+    {
+      cricket.stop();
+      ronco.stop();
+      song.play();
+    }
+    
+    nuvem[0].colors = 255.0;
+    nuvem[1].colors = 255.0;
+    nuvem[2].colors = 255.0;
+    
+    if(backg[0]<185)
+    {
+      backg[0]+=5;
+    }
+      if(backg[1]<240)
+    {
+      backg[1]+=5;
+    }
+    if(backg[2] < 255)
+    {
+      backg[2]+=5;
+    }
   }
-  else if(sol == false && backg > 0)
+  else if(sol == false)
   {
-    backg-=5;
+    star.draw();
+    if(cricket.isPlaying() == false)
+    {
+      song.stop();
+      cricket.loop();
+      ronco.loop();
+    }
+    
+    nuvem[0].colors = 122.0;
+    nuvem[1].colors = 122.0;
+    nuvem[2].colors = 122.0;
+    
+    if(backg[2] > 0)
+    {
+      backg[0]-=5;
+      backg[1]-=5;
+      backg[2]-=5;
+    }
   }
   
   //lua e sol
@@ -71,32 +123,25 @@ void draw(){
       obj = obj.reflexao();
     }
    }
-  //----------
+  //----------  
   
   ocean.draw(sol, obj);
   
   terra.draw();
   
+  moinho.draw();
+  
   coq.draw();
+  
+  nuvem[0].draw();
+  nuvem[1].draw();
+  nuvem[2].draw();
   
   casa.draw();
   
   person2.draw(sol);
-}
-
-void keyPressed(){
-  if(key == 'a')
-  {
-    if(sol == true)
-    {
-      sol = false;
-    }
-    else
-    {
-      sol = true;
-    }
-  }
-  print(sol + " ");
+  
+  
 }
 
 public void moveSolCima(){

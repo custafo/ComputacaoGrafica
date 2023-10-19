@@ -53,23 +53,6 @@ class Person2{
       
       movePerson();
     }
-    else
-    {
-      /*this.day = day;
-      changeColor();
-      //cabeca
-      strokeWeight(15);
-      point(pos[0], pos[1]);
-      //torso
-      strokeWeight(5);
-      line(pos[0], pos[1], pos[0], pos[1]+20);
-      //braco
-      line(pos[0]-10, pos[1]+10, pos[0]+10, pos[1]+10);
-      //perna
-      line(pos[0], pos[1]+20, pos[0]-10, pos[1]+35);
-      line(pos[0], pos[1]+20, pos[0]+10, pos[1]+35);
-      movePerson();*/
-    }
   }
   
   public void movePerson(){
@@ -92,7 +75,7 @@ class Person2{
   private void moveLeft(){
     for(int i = 0; i < points.length; i++)
     {
-      float[][] newPos = translate(points[i].getX(), points[i].getY(), -speed, 0);
+      float[][] newPos = translacao(points[i].getX(), points[i].getY(), -speed, 0);
       if(newPos[0][0] < Destin[0] && i == 0)
       {
         newPos[0][0] = Destin[0];
@@ -104,7 +87,7 @@ class Person2{
   private void moveRight(){
     for(int i = 0; i < points.length; i++)
     {
-      float[][] newPos = translate(points[i].getX(), points[i].getY(), speed, 0);
+      float[][] newPos = translacao(points[i].getX(), points[i].getY(), speed, 0);
       if(newPos[0][0] > Start[0] && i == 0)
       {
         newPos[0][0] = Start[0];
