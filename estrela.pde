@@ -4,7 +4,7 @@ class Estrela{
   float rotationSpeed = radians(40); // Rotação de 1 grau por quadro
   
   Estrela(){
-    float cx = 100; // Coordenada x do centro - Ajuste para mover a estrela horizontalmente
+    float cx = 50; // Coordenada x do centro - Ajuste para mover a estrela horizontalmente
     float cy = 50; // Coordenada y do centro - Ajuste para mover a estrela verticalmente
     float radius = 20;
 
